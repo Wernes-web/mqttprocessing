@@ -14,4 +14,4 @@ spec:
     spec:
       containers:
       - name: mqttprocessing
-        image: wernes1/mqttprocessing:af64048027978ef65ce8cd30efff620a8b55ac02
+        image: wernes1/mqttprocessing:ebd5c427424486f936d5d3349c9b57b9f8b264d6
