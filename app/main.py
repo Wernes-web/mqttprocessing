@@ -18,7 +18,7 @@ def on_message(client, userdata, msg):
         moisture = data.get("analogValue")
         timestamp = data.get("timestamp")
 
-        print("----- SENSOR DATA  -----", flush=True)
+        print("----- Jou vuil hond toets  -----", flush=True)
         print(f"Topic: {msg.topic}", flush=True)
         print(f"Moisture: {moisture}", flush=True)
         print(f"Timestamp: {timestamp}", flush=True)
