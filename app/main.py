@@ -1,7 +1,7 @@
 import paho.mqtt.client as mqtt
 import json
 import psycopg2
-
+import time
 
 
 
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS moisture_data (
 
 conn.commit()
 
-
+last_insert_time = 0
 
 def on_connect(client, userdata, flags, rc):
     print("Connected to MQTT broker")
@@ -34,6 +34,8 @@ def on_connect(client, userdata, flags, rc):
 
 def on_message(client, userdata, msg):
     payload = msg.payload.decode()
+    global last_insert_time
+
 
     try:
         data = json.loads(payload)
@@ -41,13 +43,25 @@ def on_message(client, userdata, msg):
         moisture = data.get("analogValue")
         timestamp = data.get("timestamp")
 
-        cursor.execute(
-            "INSERT INTO moisture_data (timestamp, moisture) VALUES (%s, %s)",
-            (timestamp, moisture)
-        )
 
-        conn.commit()
-        print("DB insert done", flush=True)
+        current_time = time.time()
+
+        if current_time - last_insert_time >= 300:
+
+            cursor.execute(
+                "INSERT INTO moisture_data (timestamp, moisture) VALUES (%s, %s)",
+                (timestamp, moisture)
+            )
+
+            conn.commit()
+
+            last_insert_time = current_time
+
+            print("Stored data in PostgreSQL", flush=True)
+
+        else:
+            print("Skipping DB insert (waiting 5 min)", flush=True)
+
 
         print("----- Sensor Data  -----", flush=True)
         print(f"Topic: {msg.topic}", flush=True)
