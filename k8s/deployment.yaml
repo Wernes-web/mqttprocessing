@@ -1,17 +1,39 @@
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
   name: mqttprocessing
+  namespace: iot
+
 spec:
   replicas: 1
+
   selector:
     matchLabels:
       app: mqttprocessing
+
   template:
     metadata:
       labels:
         app: mqttprocessing
+
     spec:
+      nodeSelector:
+        role: control
+
       containers:
       - name: mqttprocessing
-        image: wernes1/mqttprocessing:27664236ca83dc8ad251a50acde9d8fbfd0f5330
+
+        image: wernes1/mqttprocessing:latest
+
+        imagePullPolicy: Always
+
+        env:
+        - name: MQTT_HOST
+          value: mosquitto-service
+
+        - name: MQTT_PORT
+          value: "1883"
+
+        - name: DB_HOST
+          value: postgres

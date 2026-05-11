@@ -2,14 +2,19 @@ import paho.mqtt.client as mqtt
 import json
 import psycopg2
 import time
+import os
+
+import os
+
+MQTT_HOST = os.getenv("MQTT_HOST")
+DB_HOST = os.getenv("DB_HOST")
 
 
-
-BROKER = "192.168.1.17"
+BROKER = MQTT_HOST
 TOPIC = "sensor/moisture"
 
 conn = psycopg2.connect(
-    host="postgres",
+    host=DB_HOST,
     database="sensordb",
     user="postgres",
     password="password123"
@@ -77,6 +82,6 @@ client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
 
-client.connect(BROKER, 1885, 60)
+client.connect(MQTT_HOST, 1883, 60)
 
 client.loop_forever()
