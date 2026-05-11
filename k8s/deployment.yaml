@@ -24,7 +24,7 @@ spec:
       containers:
       - name: mqttprocessing
 
-        image: wernes1/mqttprocessing:latest
+        image: wernes1/mqttprocessing:d7d5e58ca4ec587becd75dba62908f5008201628
 
         imagePullPolicy: Always
 
